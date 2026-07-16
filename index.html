@@ -124,9 +124,9 @@ input.cell-import-gain{background:rgba(14,122,95,0.10);border:2px solid var(--se
 input.cell-import-loan{background:rgba(14,122,95,0.26);border:2px solid var(--sell)}
 .text-import-gain{color:var(--sell);font-weight:700}
 .import-legend{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
-.import-legend-btn{display:flex;align-items:center;justify-content:flex-start;gap:8px;width:264px;max-width:100%;text-align:left;font-size:12px;padding:7px 10px;margin-left:0}
+.import-legend-btn{display:flex;align-items:center;justify-content:flex-start;gap:6px;width:308px;max-width:100%;text-align:left;font-size:12px;padding:5px 8px;line-height:1.3;white-space:nowrap;margin-left:0}
 .import-legend-icon{display:inline-block;flex-shrink:0;vertical-align:middle}
-@media (max-width:640px){ .import-legend-btn{width:100%} }
+@media (max-width:640px){ .import-legend-btn{width:100%;white-space:normal} }
 .hbtn-nav{background:#E4DCC4;color:var(--ink-2);border:1px solid transparent;border-radius:14px;font-weight:700}
 .hbtn-nav:hover{background:#D8CDAE}
 .hbtn-nav.recalc-needed{background:var(--sell);color:#fff;border-color:var(--sell)}
@@ -591,7 +591,7 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
 </div>
 
 <div id="page-finance" class="app-page">
-<div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px">
+<div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">
   <h2 class="page-title finance-collapse-toggle" id="finance-title" style="margin:0 0 4px">住居関連費用</h2>
   <div class="import-legend">
     <button type="button" class="hbtn hbtn-dark btn-import-loan import-legend-btn" id="btn-load-loan" title="住宅ローン返済シミュレーターの出力ファイル（JSON）を読み込みます"><svg class="import-legend-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><defs><linearGradient id="gradLoanIcon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8756B"/><stop offset="100%" stop-color="#7A2A3E"/></linearGradient></defs><polygon points="12,2 22,12 12,22 2,12" fill="url(#gradLoanIcon)"/></svg>住宅ローン返済シミュレーターからデータ取込</button>
@@ -3284,6 +3284,12 @@ setupMoneyField('in-op-loan','oldLoanBalance',syncOldNetProceeds);
 setupMoneyField('in-op-price','oldPrice',function(){ syncTaxTransferCost(); syncCfProceeds(); updateTaxSpecialHint(); updateScenarioNotes(); });
 setupMoneyField('in-op-net','oldNetProceeds',function(){ st.oldNetProceedsManual=true; syncOldNetProceeds(); updateScenarioNotes(); });
 document.getElementById('btn-recalc-net').addEventListener('click',function(){
+  // ②売却益シミュレーターの精緻な税額データを取り込み済みの場合、誤操作で
+  // 簡易計算に戻してしまわないよう、破棄前に確認する。
+  if(st.oldTaxManual){
+    var ok=confirm('現在、売却益計算シミュレーターの精緻な税額データを反映中です。\n「再計算」を行うと、この税額データは破棄され、簡易計算（概算）に戻ります。\nよろしいですか？');
+    if(!ok) return;
+  }
   st.oldNetProceedsManual=false;
   st.oldTaxManual=false;
   st.taxManualSourceExportedAt=null;
