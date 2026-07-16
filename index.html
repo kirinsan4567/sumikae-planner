@@ -3532,6 +3532,13 @@ function applyLoanImport(patternKey){
   }
 
   st.loanManualSourceExportedAt=pendingLoanImportExportedAt;
+  // 手取り金額が②売却益シミュレーターの精緻な税額データ等で手動値になっている場合、
+  // 新しい残債を反映した値に自動で更新し、税額データ(oldTaxManual)は保持する。
+  // これをしないと「再計算が必要」の警告が消えず、再計算ボタン→②データ再検出バナー→再反映…のループになる。
+  if(st.oldNetProceedsManual){
+    st.oldNetProceeds=computeAutoNetProceeds();
+    document.getElementById('in-op-net').value=fmtYen(st.oldNetProceeds);
+  }
   syncOldNetProceeds();
   syncCfProceeds();
   updateRecalcButton();
