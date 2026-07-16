@@ -962,7 +962,7 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
 var SUMIKAE_WORKER_URL = "https://kirin-passcode.krsn34567.workers.dev";
 async function verifySumikaePasscode(input){
   try{
-    const res = await fetch(SUMIKAE_WORKER_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ passcode: input }) });
+    const res = await fetch(SUMIKAE_WORKER_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ passcode: input, site: "sumikae" }) });
     if(!res.ok) return false;
     const data = await res.json();
     return !!data.ok;
