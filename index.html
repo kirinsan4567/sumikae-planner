@@ -123,9 +123,10 @@ input.money{text-align:right;font-family:'Noto Sans JP',sans-serif;font-feature-
 input.cell-import-gain{background:rgba(14,122,95,0.10);border:2px solid var(--sell)}
 input.cell-import-loan{background:rgba(14,122,95,0.26);border:2px solid var(--sell)}
 .text-import-gain{color:var(--sell);font-weight:700}
-.import-legend{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--ink-2);flex-shrink:0}
-.import-legend-item{display:flex;align-items:center;gap:6px;white-space:nowrap}
-.import-legend-swatch{display:inline-block;width:12px;height:12px;border:2px solid;border-radius:2px;flex-shrink:0}
+.import-legend{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.import-legend-btn{display:flex;align-items:center;justify-content:flex-start;gap:8px;width:264px;max-width:100%;text-align:left;font-size:12px;padding:7px 10px;margin-left:0}
+.import-legend-icon{display:inline-block;flex-shrink:0;vertical-align:middle}
+@media (max-width:640px){ .import-legend-btn{width:100%} }
 .hbtn-nav{background:#E4DCC4;color:var(--ink-2);border:1px solid transparent;border-radius:14px;font-weight:700}
 .hbtn-nav:hover{background:#D8CDAE}
 .hbtn-nav.recalc-needed{background:var(--sell);color:#fff;border-color:var(--sell)}
@@ -593,8 +594,8 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
 <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:8px">
   <h2 class="page-title finance-collapse-toggle" id="finance-title" style="margin:0 0 4px">住居関連費用</h2>
   <div class="import-legend">
-    <span class="import-legend-item"><span class="import-legend-swatch" style="background:rgba(14,122,95,0.10);border-color:var(--sell)"></span>売却益計算シミュレーションからデータ取込</span>
-    <span class="import-legend-item"><span class="import-legend-swatch" style="background:rgba(14,122,95,0.26);border-color:var(--sell)"></span>住宅ローン返済シミュレーターからデータ取込</span>
+    <button type="button" class="hbtn hbtn-dark btn-import-loan import-legend-btn" id="btn-load-loan" title="住宅ローン返済シミュレーターの出力ファイル（JSON）を読み込みます"><svg class="import-legend-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><defs><linearGradient id="gradLoanIcon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8756B"/><stop offset="100%" stop-color="#7A2A3E"/></linearGradient></defs><polygon points="12,2 22,12 12,22 2,12" fill="url(#gradLoanIcon)"/></svg>住宅ローン返済シミュレーターからデータ取込</button>
+    <button type="button" class="hbtn hbtn-dark btn-import-gain import-legend-btn" id="btn-load-gain" title="売却益計算シミュレーターの出力ファイル（JSON）を読み込みます"><svg class="import-legend-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><defs><linearGradient id="gradGainIcon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6FA0D8"/><stop offset="100%" stop-color="#173F73"/></linearGradient></defs><polygon points="12,2 22,12 12,22 2,12" fill="url(#gradGainIcon)"/></svg>売却益計算シミュレーションからデータ取込</button>
   </div>
 </div>
 <div id="finance-collapse-body">
@@ -624,13 +625,11 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
       <span class="gain-shared-banner-text"></span>
       <button type="button" class="hbtn hbtn-dark gain-shared-banner-btn" style="margin-left:8px">反映する</button>
     </div>
-    <div class="ctl"><button class="hbtn hbtn-dark btn-full btn-import-gain" id="btn-load-gain" title="売却益計算シミュレーターの出力ファイル（JSON）を読み込みます">売却益データ読込</button></div>
     <input type="file" id="gain-import-file" accept=".json" style="display:none">
     <div id="loan-shared-banner" class="unit-note-block" style="display:none;background:#F5F5F2;border:1px solid var(--sell);border-radius:6px;padding:8px 10px;margin:8px 0">
       <span>住宅ローン返済シミュレーターのデータを検出しました。反映しますか？</span>
       <button type="button" class="hbtn hbtn-dark loan-shared-banner-btn" style="margin-left:8px">反映する</button>
     </div>
-    <div class="ctl"><button class="hbtn hbtn-dark btn-full btn-import-loan" id="btn-load-loan" title="住宅ローン返済シミュレーターの出力ファイル（JSON）を読み込みます">住宅ローン返済データ読込</button></div>
     <input type="file" id="loan-import-file" accept=".json" style="display:none">
     <hr class="ctl-divider">
     <div class="ctl" id="row-op-payloan"><label for="in-op-payloan">現居費（返済額）<span class="fn">※1</span></label><input type="text" inputmode="numeric" class="money cell-import-loan" id="in-op-payloan"><span class="unit">万円/月</span></div>
