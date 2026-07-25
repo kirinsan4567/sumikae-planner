@@ -49,6 +49,8 @@ h1{font-size:20px;font-weight:700;letter-spacing:.04em;white-space:nowrap}
 .btn-full{width:100%;text-align:center;margin-left:0!important}
 .hbtn-reset{color:var(--shu);border-color:#E8C4BE}
 .hbtn-reset:hover{background:#FBEEEC}
+.hbtn-link{background:#2C3E6B;color:#fff;border-color:#2C3E6B}
+.hbtn-link:hover{background:#22304F;color:#fff}
 .site-footer{text-align:center;color:var(--ink-3);font-size:11.5px;margin-top:30px;padding:24px 20px;border-top:0;background:transparent;border-radius:0;width:100%;box-sizing:border-box}
 .footer-disclaimer{font-size:11.5px;color:var(--ink-2);line-height:1.8;max-width:900px;margin:0 auto 16px}
 .footer-brand{display:flex;align-items:center;justify-content:center;gap:10px;font-size:12.5px;color:var(--ink-2)}
@@ -482,8 +484,8 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
     <button type="button" class="page-nav-btn" data-page="finance">資金計画</button>
     <button type="button" class="page-nav-btn" data-page="cflist">入出金一覧</button>
     <button type="button" class="page-nav-btn" data-page="summary">サマリー</button>
+    <button type="button" class="page-nav-btn" id="btn-nav-bsmodel" data-page="bsmodel">BSモデリング</button>
     <button type="button" class="page-nav-btn" data-page="tips">Tips</button>
-    <button type="button" class="page-nav-btn" data-page="service">Service</button>
   </nav>
   <div class="hdr-btns">
     <button id="btn-sample" class="hbtn">Sample</button>
@@ -491,6 +493,7 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
     <button id="btn-save" class="hbtn">保存</button>
     <button id="btn-export" class="hbtn">出力</button>
     <button id="btn-load" class="hbtn">読込</button>
+    <a id="btn-portal-link" class="hbtn hbtn-link" href="https://kirinsan4567.github.io/portal/" target="_blank" rel="noopener">Link</a>
     <input type="file" id="file-load" accept="application/json" style="display:none">
   </div>
 </header>
@@ -595,7 +598,7 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
   <h2 class="page-title finance-collapse-toggle" id="finance-title" style="margin:0 0 4px">住居関連費用</h2>
   <div class="import-legend">
     <button type="button" class="hbtn hbtn-dark btn-import-loan import-legend-btn" id="btn-load-loan" title="住宅ローン返済シミュレーターの出力ファイル（JSON）を読み込みます"><svg class="import-legend-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><defs><linearGradient id="gradLoanIcon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E8756B"/><stop offset="100%" stop-color="#7A2A3E"/></linearGradient></defs><polygon points="12,2 22,12 12,22 2,12" fill="url(#gradLoanIcon)"/></svg>住宅ローン返済シミュレーターからデータ取込</button>
-    <button type="button" class="hbtn hbtn-dark btn-import-gain import-legend-btn" id="btn-load-gain" title="売却益計算シミュレーターの出力ファイル（JSON）を読み込みます"><svg class="import-legend-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><defs><linearGradient id="gradGainIcon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6FA0D8"/><stop offset="100%" stop-color="#173F73"/></linearGradient></defs><polygon points="12,2 22,12 12,22 2,12" fill="url(#gradGainIcon)"/></svg>売却益計算シミュレーションからデータ取込</button>
+    <button type="button" class="hbtn hbtn-dark btn-import-gain import-legend-btn" id="btn-load-gain" title="売却益計算シミュレーターの出力ファイル（JSON）を読み込みます"><svg class="import-legend-icon" viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><defs><linearGradient id="gradGainIcon" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6FA0D8"/><stop offset="100%" stop-color="#173F73"/></linearGradient></defs><polygon points="12,2 22,12 12,22 2,12" fill="url(#gradGainIcon)"/></svg>売却益計算シミュレーターからデータ取込</button>
   </div>
 </div>
 <div id="finance-collapse-body">
@@ -933,6 +936,18 @@ input:focus,button:focus-visible{outline:2px solid var(--buy);outline-offset:1px
     <p>①②の結果を受けて、スケジュール（矢羽）・月次資金残高・入出金一覧まで一気通貫でシミュレーションする、住み替え全体の資金計画ツールです。</p>
     <a href="https://kirinsan4567.github.io/loan-simulator/sumikae_planner" target="_blank" rel="noopener" class="hbtn hbtn-dark btn-full">新しいタブで開く ↗</a>
   </div>
+</div>
+</div>
+
+<div id="page-bsmodel" class="app-page">
+<h2 class="page-title">BSモデリング</h2>
+<p style="font-size:13px;color:var(--ink);line-height:1.6;margin:0 0 6px">購入前 → 購入直後 → 時価評価 → 売却後 → 2次取得まで、住み替えのバランスシートを連続表示します。可能な項目はすみかえNAVIの入力から自動で引き継がれます。</p>
+<p style="font-size:11.5px;color:var(--ink-3);margin:0 0 10px">画面が表示されない場合は、下の「別タブで開く」から直接お試しください（このファイルがindex.htmlと同じ場所に置かれていないと表示されません）。</p>
+<div class="ctl" style="margin:0 0 10px">
+  <a id="btn-bsmodel-newtab" class="hbtn hbtn-dark" href="#" target="_blank" rel="noopener">別タブで開く ↗</a>
+</div>
+<div id="bsmodel-frame-wrap" style="border:1px solid var(--line-2);border-radius:10px;overflow:hidden;background:#fff;">
+  <iframe id="bsModelFrame" title="BSモデリング" style="width:100%;height:calc(100vh - 300px);min-height:600px;border:0;display:block;"></iframe>
 </div>
 </div>
 
@@ -4074,8 +4089,34 @@ document.querySelectorAll('.finance-collapse-toggle2').forEach(function(hd){
     if(body){ body.classList.toggle('collapsed'); hd.classList.toggle('is-collapsed', body.classList.contains('collapsed')); }
   });
 });
+function buildBsModelPrefill(){
+  var p = {};
+  function round1(n){ return Math.round(n*10)/10; }
+  if(st.oldPurchasePrice) p.price1 = st.oldPurchasePrice;
+  if(st.oldPrice) p.salePrice = st.oldPrice;
+  if(st.oldAcqDate && st.saleSettle){
+    var years = (st.saleSettle - st.oldAcqDate) / (365.25*24*3600*1000);
+    if(years>0) p.elapsed = Math.round(years*10)/10;
+  }
+  if(st.taxSpecial){ p.deduction3000 = (st.taxSpecial==='c3000'); }
+  if(st.oldPrice && st.taxTransferCost!=null && st.oldPrice>0){
+    var sRate = st.taxTransferCost / st.oldPrice * 100;
+    if(isFinite(sRate) && sRate>0) p.sellFeeRate = round1(sRate);
+  }
+  if(st.newPrice) p.price3 = st.newPrice;
+  if(st.newFees!=null) p.cost3 = st.newFees;
+  if(st.newIsResale && st.newPrice>0 && st.newBrokerFee!=null){
+    var bRate = st.newBrokerFee / st.newPrice * 100;
+    if(isFinite(bRate) && bRate>0) p.buyFeeRate = round1(bRate);
+  } else if(st.newIsResale===false){
+    p.buyFeeRate = 0;
+  }
+  if(st.newDown!=null) p.downPayUse = st.newDown;
+  if(st.newLoan!=null) p.loanAmount3 = st.newLoan;
+  return p;
+}
 document.querySelectorAll('.page-nav-btn').forEach(function(btn){
-  btn.addEventListener('click',function(){
+  btn.addEventListener('click',function(e){
     var page=this.dataset.page;
     document.querySelectorAll('.page-nav-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
     document.getElementById('page-scheduler').classList.toggle('active', page==='scheduler');
@@ -4084,6 +4125,14 @@ document.querySelectorAll('.page-nav-btn').forEach(function(btn){
     document.getElementById('page-summary').classList.toggle('active', page==='summary');
     document.getElementById('page-tips').classList.toggle('active', page==='tips');
     document.getElementById('page-service').classList.toggle('active', page==='service');
+    document.getElementById('page-bsmodel').classList.toggle('active', page==='bsmodel');
+    if(page==='bsmodel'){
+      try{ localStorage.setItem('kirin_bsmodel_prefill', JSON.stringify(buildBsModelPrefill())); }catch(err){}
+      var isMobile = window.innerWidth <= 640;
+      var url = isMobile ? 'sumikae-bs-model-embed.html' : 'sumikae-bs-model-standalone.html';
+      document.getElementById('bsModelFrame').src = url;
+      document.getElementById('btn-bsmodel-newtab').href = url;
+    }
     window.scrollTo(0,0);
     // 非表示（display:none）の間はチャート/矢羽の幅が0で計算されてしまうため、
     // 表示された直後に再描画してサイズを正しく計算し直す
