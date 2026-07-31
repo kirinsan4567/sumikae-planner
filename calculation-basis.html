@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>計算根拠詳細｜不動産売却益計算シミュレーター</title>
+<style>
+  :root{
+    --paper:#F5F5F2;
+    --panel:#FFFFFF;
+    --ink:#222;
+    --ink-soft:#666;
+    --line:#DDD;
+    --green:#1E5FA8;
+    --green-dark:#14315C;
+    --green-light:#8FB8E0;
+    --green-pale:#DCE9F5;
+    --accent:#1E5FA8;
+    --accent-soft:#DCE9F5;
+    --danger:#A6432F;
+    --danger-soft:#F8ECE8;
+    --radius:8px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', Meiryo, sans-serif;
+    font-size:14px;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+    padding:0 0 60px;
+  }
+  header.cb-header{
+    background:linear-gradient(to right, var(--green-dark), var(--green));
+    color:#fff;
+    padding:16px 20px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  header.cb-header h1{
+    font-size:17px;
+    margin:0;
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:22px 18px 0;
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 20px;
+    margin-bottom:16px;
+    box-shadow:0 1px 3px rgba(20,50,45,0.06);
+  }
+  .notice{
+    background:var(--accent-soft);
+    border:1px solid var(--green-light);
+    border-radius:var(--radius);
+    padding:14px 18px;
+    margin-bottom:16px;
+    font-size:12.5px;
+    color:var(--ink);
+    line-height:1.75;
+  }
+  .toc{ padding:16px 20px; }
+  .toc h2{ font-size:14px; margin:0 0 10px; color:var(--green-dark); }
+  .toc ol{ margin:0; padding-left:22px; }
+  .toc li{ margin-bottom:5px; }
+  .toc a{ color:var(--accent); text-decoration:none; }
+  .toc a:hover{ text-decoration:underline; }
+  section.cb-section{ scroll-margin-top:16px; }
+  section.cb-section h2{
+    font-size:15.5px;
+    color:var(--green-dark);
+    border-bottom:2px solid var(--green-pale);
+    padding-bottom:8px;
+    margin:0 0 12px;
+  }
+  h3.sub{ font-size:13.5px; color:var(--green-dark); margin:18px 0 8px; }
+  h3.sub:first-of-type{ margin-top:6px; }
+  table.cb-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12.5px;
+    margin:10px 0 14px;
+  }
+  table.cb-table th, table.cb-table td{
+    border:1px solid var(--line);
+    padding:7px 10px;
+    text-align:left;
+  }
+  table.cb-table th{
+    background:var(--green-pale);
+    color:var(--green-dark);
+    font-weight:700;
+  }
+  table.cb-table td:not(:first-child), table.cb-table th:not(:first-child){
+    text-align:right;
+  }
+  pre.formula{
+    background:#F4F3EE;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:12px 14px;
+    font-size:12.5px;
+    line-height:1.7;
+    overflow-x:auto;
+    white-space:pre;
+    font-family:'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'BIZ UDPGothic', Meiryo, sans-serif;
+    color:#2A2A26;
+  }
+  p.note{
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.75;
+    margin:6px 0 0;
+  }
+</style>
+</head>
+<body>
+
+<header class="cb-header">
+  <h1>計算根拠詳細</h1>
+</header>
+
+<div class="wrap">
+
+  <div class="notice">
+    ご利用にあたって<br>
+    このページに記載の税率・控除額・計算式は、本シミュレーター(index.html)が実際に使用しているロジックをそのまま転記したものです。税制は改正されることがあり、また個別の物件・契約条件によって実際の金額は変わります。最終的な金額の確認・判断は、税理士・司法書士・国税庁サイト等でお願いします。
+  </div>
+
+  <div class="notice">
+    このページの数式で使う記号(日本の数学の授業では使わない、プログラミング由来の表記です)<br>
+    ・<strong>min(a, b)</strong> ＝ aとbのうち、小さい方の値(例：min(3000, 4750) = 3000)<br>
+    ・<strong>max(a, b)</strong> ＝ aとbのうち、大きい方の値(例：max(-500, 0) = 0。マイナスにならないようにする時によく使います)
+  </div>
+
+  <div class="panel toc">
+    <h2>目次</h2>
+    <ol>
+      <li><a href="#sec1">売却価格の予測(ベスト/モデレート/ワーストシナリオ)</a></li>
+      <li><a href="#sec2">減価償却費の計算</a></li>
+      <li><a href="#sec3">譲渡所得税・住民税</a></li>
+      <li><a href="#sec4">3,000万円特別控除・買換え特例</a></li>
+      <li><a href="#sec5">購入諸経費の内訳</a></li>
+      <li><a href="#sec6">売却諸経費(仲介手数料)</a></li>
+      <li><a href="#sec7">その他の換算</a></li>
+    </ol>
+  </div>
+
+  <section class="cb-section panel" id="sec1">
+    <h2>1. 売却価格の予測(ベスト/モデレート/ワーストシナリオ)</h2>
+    <p>竣工日からの築年数に応じて、ベスト・ワーストシナリオの年間変動率(対前年比)を以下の階層で切り替えます。モデレートは築年数によらず一律です。</p>
+    <table class="cb-table">
+      <tr><th>築年数</th><th>ベスト</th><th>ワースト</th></tr>
+      <tr><td>1〜5年</td><td>+1.0%</td><td>-3.0%</td></tr>
+      <tr><td>6〜10年</td><td>+0.8%</td><td>-2.5%</td></tr>
+      <tr><td>11〜20年</td><td>+0.5%</td><td>-2.0%</td></tr>
+      <tr><td>21〜30年</td><td>+0.2%</td><td>-1.5%</td></tr>
+      <tr><td>31〜40年</td><td>0.0%</td><td>-1.2%</td></tr>
+      <tr><td>41年〜</td><td>-0.2%</td><td>-1.0%</td></tr>
+      <tr><td>モデレート(全期間共通)</td><td colspan="2" style="text-align:center;">-1.0%</td></tr>
+    </table>
+    <p class="note">竣工日が未入力の場合は、築1年からスタートしたと仮定した数列(上表をそのまま1年目から適用した場合の値)をフォールバックとして使用します。各年の指数は前年の指数×(1+変動率/100)で複利計算しています。</p>
+  </section>
+
+  <section class="cb-section panel" id="sec2">
+    <h2>2. 減価償却費の計算</h2>
+    <p>建物価格部分のみを対象に、非事業用資産(旧定額法相当)の簡便法で計算しています。</p>
+    <h3 class="sub">耐用年数の決定</h3>
+    <pre class="formula">経過年数(購入時点で築何年か) ＝ 竣工日から購入(契約)日までの年数
+
+もし 経過年数 ≥ 法定耐用年数：
+  残存耐用年数 ＝ 法定耐用年数 × 0.2（小数点以下切り捨て）
+そうでなければ：
+  残存耐用年数 ＝ (法定耐用年数－経過年数) + 経過年数×0.2 （小数点以下切り捨て）
+  ※最低2年</pre>
+    <h3 class="sub">償却率</h3>
+    <pre class="formula">償却率 ＝ 1 ÷ 残存耐用年数 を計算し、小数第6位を切り捨てる</pre>
+    <h3 class="sub">年間償却費</h3>
+    <pre class="formula">年間償却費 ＝ min( 建物取得費 × 0.9 × 償却率 ,
+              建物取得費 × 0.95 － 累計償却費 )</pre>
+    <p class="note">建物取得費＝建物価格＋建物按分の購入諸経費。取得費全体の95%を超えて償却しないよう上限を設けています(非事業用資産の考え方に基づく簡便計算)。用途(自宅用/賃貸用等)によって、対象年ごとに償却するかどうかも判定しています。</p>
+  </section>
+
+  <section class="cb-section panel" id="sec3">
+    <h2>3. 譲渡所得税・住民税</h2>
+    <p>譲渡年の1月1日時点の所有期間で、短期・長期・長期(10年超軽減)を判定します。</p>
+    <table class="cb-table">
+      <tr><th>所有期間</th><th>区分</th><th>所得税</th><th>住民税</th></tr>
+      <tr><td style="text-align:left;">5年以下</td><td style="text-align:left;">短期譲渡</td><td>30.63%</td><td>9%</td></tr>
+      <tr><td style="text-align:left;">5年超〜10年以下</td><td style="text-align:left;">長期譲渡(通常)</td><td>15.315%</td><td>5%</td></tr>
+      <tr><td style="text-align:left;">10年超・課税譲渡所得6,000万円以下の部分</td><td style="text-align:left;">長期譲渡(軽減税率の特例)</td><td>10.21%</td><td>4%</td></tr>
+      <tr><td style="text-align:left;">10年超・6,000万円超の部分</td><td style="text-align:left;">長期譲渡(軽減税率の特例)</td><td>15.315%</td><td>5%</td></tr>
+    </table>
+    <p class="note">10年超の場合、課税譲渡所得のうち6,000万円までは軽減税率、超える部分は通常の長期譲渡税率で計算し、合算します。</p>
+  </section>
+
+  <section class="cb-section panel" id="sec4">
+    <h2>4. 3,000万円特別控除・買換え特例</h2>
+    <h3 class="sub">3,000万円特別控除</h3>
+    <pre class="formula">控除額 ＝ min( max(譲渡所得, 0), 3000 )   ※万円
+通常課税分 ＝ max(譲渡所得 － 3000, 0)</pre>
+    <h3 class="sub">買換え特例の自動判定(本シミュレーターで判定できる範囲)</h3>
+    <table class="cb-table">
+      <tr><th>要件</th><th>基準</th></tr>
+      <tr><td style="text-align:left;">譲渡対価(売却価格)</td><td>1億円以下</td></tr>
+      <tr><td style="text-align:left;">所有期間</td><td>譲渡年の1月1日時点で10年超</td></tr>
+    </table>
+    <p class="note">実際にはこの他にも、居住期間10年以上、買換え資産の床面積要件、親族間売買でないこと等の要件があり、本シミュレーターでは自動判定していません。買換え特例は「非課税」ではなく「将来への繰延べ」で、繰延べた譲渡益は買換え先物件の取得費から差し引かれた状態で引き継がれます。</p>
+  </section>
+
+  <section class="cb-section panel" id="sec5">
+    <h2>5. 購入諸経費の内訳</h2>
+    <p>「内訳を入力する」をオンにした場合、以下の6項目を個別に計算して合計します。</p>
+
+    <h3 class="sub">① 仲介手数料</h3>
+    <pre class="formula">仲介手数料 ＝ 価格 × 3% ＋ 6万円　(速算式・税別ベース概算)</pre>
+    <p class="note">「仲介会社を通して購入した」にチェックが入っている場合のみ計算します。新築を売主(デベロッパー)から直接購入した場合は通常0円です。</p>
+
+    <h3 class="sub">② 売買契約印紙税／③ 金消契約印紙税</h3>
+    <p>軽減後の印紙税額表(令和6年度税制改正時点の延長措置ベース)を、売買契約は価格、金消契約は借入額に対して適用します。</p>
+    <table class="cb-table">
+      <tr><th>契約金額</th><th>印紙税額</th></tr>
+      <tr><td style="text-align:left;">10万円以下</td><td>0円</td></tr>
+      <tr><td style="text-align:left;">10万円超〜50万円以下</td><td>200円</td></tr>
+      <tr><td style="text-align:left;">50万円超〜100万円以下</td><td>500円</td></tr>
+      <tr><td style="text-align:left;">100万円超〜500万円以下</td><td>1,000円</td></tr>
+      <tr><td style="text-align:left;">500万円超〜1,000万円以下</td><td>5,000円</td></tr>
+      <tr><td style="text-align:left;">1,000万円超〜5,000万円以下</td><td>1万円</td></tr>
+      <tr><td style="text-align:left;">5,000万円超〜1億円以下</td><td>3万円</td></tr>
+      <tr><td style="text-align:left;">1億円超〜5億円以下</td><td>6万円</td></tr>
+      <tr><td style="text-align:left;">5億円超〜10億円以下</td><td>16万円</td></tr>
+      <tr><td style="text-align:left;">10億円超〜50億円以下</td><td>32万円</td></tr>
+      <tr><td style="text-align:left;">50億円超</td><td>48万円</td></tr>
+    </table>
+    <p class="note">金消契約印紙税は、借入額が入力されている場合のみ計算します(借入がない場合は0円)。</p>
+
+    <h3 class="sub">④ 登記費用(登録免許税＋司法書士報酬概算)</h3>
+    <pre class="formula">土地の所有権移転登記　＝ 土地の固定資産税評価額 × 1.5%　(軽減税率)
+建物の登記　　　　　＝ 建物の固定資産税評価額 × 0.15%(新築の保存登記) または 0.3%(中古の移転登記、軽減税率)
+抵当権設定登記　　　＝ 借入額 × 0.1%　(軽減税率、借入がある場合のみ)
+司法書士報酬　　　　＝ 8万円　(概算・固定値。実際は依頼先により3〜15万円程度で変動)
+
+登記費用 ＝ 上記の合計</pre>
+
+    <h3 class="sub">⑤ ローン事務手数料</h3>
+    <pre class="formula">【定率型】ローン事務手数料 ＝ 借入額 × 手数料率(%)　(初期値2.2%)
+【定額型】ローン事務手数料 ＝ 固定額(初期値3.3万円)</pre>
+    <p class="note">金融機関により定率型・定額型のどちらか、または保証料型など別方式の場合もあるため、実際の金融機関の条件に合わせて設定してください。</p>
+
+    <h3 class="sub">⑥ 不動産取得税</h3>
+    <pre class="formula">土地分 ＝ 土地の固定資産税評価額 × 1/2(住宅用地の課税標準の特例) × 3%
+建物分(新築) ＝ max(建物の固定資産税評価額 － 1,200万円, 0) × 3%
+建物分(中古) ＝ 建物の固定資産税評価額 × 3%　(築年数別控除は未反映の簡易概算)
+
+不動産取得税 ＝ 土地分 ＋ 建物分</pre>
+    <p class="note">中古住宅の建物分には、本来は築年数に応じた控除額(建築時期ごとに定められた金額)がありますが、本シミュレーターでは反映していません。中古物件で正確な金額を知りたい場合は、都道府県税事務所または税理士にご確認ください。</p>
+
+    <h3 class="sub">固定資産税評価額が未入力の場合の概算</h3>
+    <pre class="formula">土地の評価額(概算) ＝ 土地価格 × 70%
+建物の評価額(概算) ＝ 建物価格 × 55%</pre>
+    <p class="note">固定資産税評価額は、実勢価格(売買価格)よりも一般的に低く、目安として土地は公示地価の70%程度、建物は請負金額の50〜60%程度と言われています。この目安を使って自動的に概算しています。正確な数値は、購入時の固定資産税課税明細書または不動産取得税の納税通知書に記載されています。手元になくても、この概算値のままで問題ありません。</p>
+  </section>
+
+  <section class="cb-section panel" id="sec6">
+    <h2>6. 売却諸経費(仲介手数料)</h2>
+    <pre class="formula">仲介手数料の法定上限(速算式) ＝ 売却価格 × 3% ＋ 6万円</pre>
+    <p class="note">「売却時設定」で率(%)を直接指定できます。半額・定額プランの仲介会社を利用する場合は、その実際の率を入力してください。「年別詳細シミュレーション」の各年の金額は、その年に売却したと仮定した場合の見積額です(実際に発生するのは売却した年のみです)。</p>
+  </section>
+
+  <section class="cb-section panel" id="sec7">
+    <h2>7. その他の換算</h2>
+    <pre class="formula">1坪 ＝ 3.30578㎡
+坪単価 ＝ 価格 ÷ (専有面積 ÷ 3.30578)
+平米数から坪数を出す場合 ＝ 平米数 × 0.3025 ＝ 坪数(小数点第3位以下を四捨五入または切り捨て)</pre>
+  </section>
+
+</div>
+
+</body>
+</html>
